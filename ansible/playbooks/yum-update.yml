@@ -1,6 +1,0 @@
-# yum-update.yml
----
-- hosts: webservers:loadbalancers
-tasks:
-- name: Updating yum packages
-  yum: name=openssl state=latest

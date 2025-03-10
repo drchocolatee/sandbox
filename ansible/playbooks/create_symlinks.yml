@@ -1,8 +1,0 @@
----
- - name: create symlinks
-   hosts: uat_ddm_hosts
-   tasks:
-    - name: making the symlinks
-      become_user: root
-      become: yes
-      shell: ./usr/share/ddm/bin/create_symlinks.sh

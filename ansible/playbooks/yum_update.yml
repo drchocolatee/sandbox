@@ -1,8 +1,0 @@
----
- - name: yum update
-   hosts: all_hosts
-   tasks:
-    - name: yum update
-      become_user: root
-      become: yes
-      shell: yum -y update rsyslog-8.24.0-57.el7_9.3

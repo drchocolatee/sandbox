@@ -1,8 +1,0 @@
-<user identifier="anonymous">
-  <userGroupIdentifier>anonymous</userGroupIdentifier>
-  <identity>anonymous</identity>
-  <groupAccessControlProvider>file-provider</groupAccessControlProvider>
-  <accessPolicies>
-    <policy identifier="read-all-resources" action="read" resource="/proxy/*" />
-  </accessPolicies>
-</user>
