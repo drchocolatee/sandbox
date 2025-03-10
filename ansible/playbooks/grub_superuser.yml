@@ -1,0 +1,30 @@
+---
+ - name: run task on all hosts
+   hosts: uat_hosts
+   tasks:
+    - name: verify superuser acct
+      become_user: root
+      become: yes
+      shell: grep -iw "superusers" /boot/grub2/grub.cfg
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: rm extra backups of 01_users
+      become_user: root
+      become: yes
+      shell: mv -v /etc/grub.d/01_users-backup-0* /home/ansible/
+    - name: update grub.cfg
+      become_user: root
+      become: yes
+      shell: /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+    - name: verify superuser acct
+      become_user: root
+      become: yes
+      shell: grep -iw "superusers" /boot/grub2/grub.cfg
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines

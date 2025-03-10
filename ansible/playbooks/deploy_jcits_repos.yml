@@ -1,0 +1,34 @@
+---
+  - name: Deploy local yum repos
+    hosts: uat_hosts
+    tasks:
+      - name: install local jcits repo
+        become_user: root
+        become: yes
+        copy:
+          src: /etc/ansible/templates/uat-jcits.repo
+          dest: /etc/yum.repos.d/uat-jcits.repo
+          owner: root
+          group: root
+          mode: "644"
+          force: yes
+      - name: install local jcits-util repo
+        become_user: root
+        become: yes
+        copy:
+          src: /etc/ansible/templates/uat-jcits-util.repo
+          dest: /etc/yum.repos.d/uat-jcits-util.repo
+          owner: root
+          group: root
+          mode: "644"
+          force: yes
+      - name: install local jcits-util repo
+        become_user: root
+        become: yes
+        copy:
+          src: /etc/ansible/templates/uat-jcits-util.repo
+          dest: /etc/yum.repos.d/uat-jcits-util.repo
+          owner: root
+          group: root
+          mode: "644"
+          force: yes

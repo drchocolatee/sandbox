@@ -1,0 +1,8 @@
+---
+ - name: Restart mongo cluster
+   hosts: 10.12.30.80, 10.12.30.81, 10.12.30.82
+   tasks:
+    - name: reboot mongo
+      become_user: root
+      become: yes
+      shell: reboot

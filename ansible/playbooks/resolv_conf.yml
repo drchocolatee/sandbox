@@ -1,0 +1,28 @@
+---
+ - name: Install and configure idm client
+   hosts: uat_hosts
+   tasks:
+    - name: make resolv.conf immutable
+      become_user: root
+      become: yes
+      shell: chattr -i /etc/resolv.conf
+    - name: add DNS entry
+      become_user: root
+      become: yes
+      lineinfile:
+       path: /etc/resolv.conf
+       state: absent
+       regexp: "nameserver 10.12.2.252"
+       line: last
+    - name: add DNS entry
+      become_user: root
+      become: yes
+      lineinfile:
+       path: /etc/resolv.conf
+       state: present
+       regexp: "nameserver 10.12.2.252"
+       line: "nameserver 10.12.2.252"
+    - name: make resolv.conf immutable
+      become_user: root
+      become: yes
+      shell: chattr +i /etc/resolv.conf

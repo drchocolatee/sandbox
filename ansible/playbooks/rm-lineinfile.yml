@@ -1,0 +1,12 @@
+# rm-account.yml
+---
+ - name: run task on all hosts
+   hosts: 10.23.1.164
+   tasks:
+    - name: Confirming games account
+      become_user: root
+      become: yes
+      lineinfile:
+       path: /etc/pam.d/password-auth
+       regexp: "auth [default=die] pam_faillock.so authfail audit deny=3 even_deny_root fail_interval=900 unlock_time=900"
+       state: absent

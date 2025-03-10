@@ -1,0 +1,59 @@
+---
+ - name: Install and configure idm client
+   hosts: uat_hosts
+   tasks:
+    - name: add DNS entry
+      become_user: root
+      become: yes
+      lineinfile:
+       path: /etc/resolv.conf
+       regexp: "nameserver 10.12.30.201"
+       state: present
+       line: "nameserver 10.12.30.201"
+    - name: make resolv.conf immutable
+      become_user: root
+      become: yes
+      shell: chattr +i /etc/resolv.conf
+    - name: restart network
+      become_user: root
+      become: yes
+      shell: systemctl restart network
+    - name: Install ida-client and dconf
+      become_user: root
+      become: yes
+      yum:
+        name: 
+         - ipa-client
+         - dconf
+        disable_gpg_check: yes
+        state: present
+    - name: run install command
+      become_user: root
+      become: yes
+      shell: /usr/sbin/ipa-client-install --unattended --principal admin --password '12maCE#$_ipaAdminFinal-1!' --enable-dns-updates --hostname {{inv_fqdn}} --server jidm-test-2.uat.local --domain uat.local --realm UAT.LOCAL
+    - name: Copy sssd File
+      become_user: root
+      become: yes
+      template:
+        src: /etc/ansible/templates/sssd.conf.j2
+        dest: /etc/sssd/sssd.conf
+        owner: root
+        group: root
+        mode: "600"
+        force: yes
+    - name: update authconfig
+      become_user: root
+      become: yes
+      shell: /usr/sbin/authconfig --disableldapauth --disableldap --enablesssdauth --enablemkhomedir --updateall
+    - name: stop sssd
+      become_user: root
+      become: yes
+      shell: systemctl stop sssd
+    - name: clear sssd cache
+      become_user: root
+      become: yes
+      shell: /usr/sbin/sss_cache -E
+    - name: start sssd
+      become_user: root
+      become: yes
+      shell: systemctl start sssd

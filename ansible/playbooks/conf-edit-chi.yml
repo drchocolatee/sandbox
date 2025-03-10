@@ -1,0 +1,23 @@
+# this is to edit config file
+---
+ - name: edit log4j2.properties
+   hosts: es_audit_masters
+   tasks:
+    - name: edit config
+      become_user: root
+      become: yes
+      path: /etc/elasticsearch/log4j2.properties
+      regexp: ''
+      replace: ''
+      backup: yes
+
+ - name: edit log4j2.properties
+   hosts: es_audit_nodes
+   tasks:
+    - name: edit config
+      become_user: root
+      become: yes
+      path: /etc/elasticsearch/log4j2.properties
+      regexp: ''
+      replace: ''
+      backup: yes   

@@ -1,0 +1,86 @@
+To offload data from Elasticsearch node 1 to Elasticsearch node 2, you need to use the reindex API. This process involves reindexing documents from one index to another, specifying the source and destination nodes.
+
+Below are the steps and commands to perform this operation:
+
+Step 1: Set Up Elasticsearch Nodes
+Ensure that both Elasticsearch nodes are part of the same cluster or can communicate with each other. Verify their status with the following commands:
+
+bash
+Copy code
+curl -X GET "http://<node1_ip>:9200/_cluster/health?pretty"
+curl -X GET "http://<node2_ip>:9200/_cluster/health?pretty"
+
+Step 2: Reindex Data from Node 1 to Node 2
+Use the _reindex API to transfer data from an index on Node 1 to an index on Node 2. Replace <source_index> with the name of your source index on Node 1 and <destination_index> with the name of your destination index on Node 2.
+
+bash
+curl -X POST "http://<node2_ip>:9200/_reindex" -H 'Content-Type: application/json' -d'
+{
+  "source": {
+    "remote": {
+      "host": "http://<node1_ip>:9200"
+    },
+    "index": "<source_index>"
+  },
+  "dest": {
+    "index": "<destination_index>"
+  }
+}
+'
+
+Step 3: Verify Data Transfer
+After the reindex operation, verify that the data has been transferred successfully by checking the document count in the destination index:
+
+bash
+Copy code
+curl -X GET "http://<node2_ip>:9200/<destination_index>/_count?pretty"
+Step 4: Clean Up (Optional)
+If you need to delete the data from the source index on Node 1 after confirming the transfer, use the following command:
+
+bash
+Copy code
+curl -X DELETE "http://<node1_ip>:9200/<source_index>?pretty"
+
+
+
+Example Commands
+Here is a concrete example assuming:
+
+Node 1 IP: 192.168.1.10
+Node 2 IP: 192.168.1.11
+Source Index: source_index
+Destination Index: destination_index
+Check Cluster Health:
+
+bash
+Copy code
+curl -X GET "http://192.168.1.10:9200/_cluster/health?pretty"
+curl -X GET "http://192.168.1.11:9200/_cluster/health?pretty"
+Reindex Data:
+
+bash
+Copy code
+curl -X POST "http://192.168.1.11:9200/_reindex" -H 'Content-Type: application/json' -d'
+{
+  "source": {
+    "remote": {
+      "host": "http://192.168.1.10:9200"
+    },
+    "index": "source_index"
+  },
+  "dest": {
+    "index": "destination_index"
+  }
+}
+'
+Verify Data Transfer:
+
+bash
+Copy code
+curl -X GET "http://192.168.1.11:9200/destination_index/_count?pretty"
+Delete Source Index (Optional):
+
+bash
+Copy code
+curl -X DELETE "http://192.168.1.10:9200/source_index?pretty"
+These commands should help you offload data from Elasticsearch node 1 to node 2 effectively.

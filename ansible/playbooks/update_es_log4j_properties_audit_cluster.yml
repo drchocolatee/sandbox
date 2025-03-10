@@ -1,0 +1,14 @@
+---
+ - name: Update log4j.properties
+   hosts: es_audit_masters es_audit_nodes
+   tasks:
+    - name: Copy log4j.properties File
+      become_user: root
+      become: yes
+      copy:
+        src: /etc/ansible/templates/log4j2.properties
+        dest: "/etc/elasticsearch/log4j2.properties"
+        owner: root
+        group: elasticsearch
+        mode: "660"
+        force: yes

@@ -1,0 +1,34 @@
+# rm-account.yml
+---
+ - name: run task on all hosts
+   hosts: all_hosts
+   tasks:
+    - name: Confirming games account
+      become_user: root
+      become: yes
+      shell: cat /etc/passwd | grep games
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: Confirming games account
+      become_user: root
+      become: yes
+      shell: rm -rf /usr/games/
+    - name: Confirming games account
+      become_user: root
+      become: yes
+      lineinfile:
+       path: /etc/shadow
+       regexp: "games"
+       state: absent
+    - name: Confirming games account
+      become_user: root
+      become: yes
+      shell: cat /etc/passwd | grep games
+      register: grep_output2
+
+    - name: print output
+      debug:
+        var: grep_output2.stdout_lines

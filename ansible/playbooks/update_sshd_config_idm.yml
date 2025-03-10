@@ -1,0 +1,43 @@
+# update_sshd_config_idm.yml
+---
+ - name: run task on idm host
+   hosts: 10.20.1.145
+   tasks:
+    - name: checking sshd_config file
+      become_user: root
+      become: yes
+      shell: grep X11Forwarding /etc/ssh/sshd_config
+      register: grep_output
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: Copy updated sshd_config File
+      become_user: root
+      become: yes
+      copy:
+        src: /etc/ssh/sshd_config-backup-idm-config
+        dest: "/etc/ssh/sshd_config"
+        owner: root
+        group: root
+        mode: "644"
+        force: yes
+    - name: checking updated sshd_config file
+      become_user: root
+      become: yes
+      shell: grep X11Forwarding /etc/ssh/sshd_config
+      register: grep_output2
+    - name: print output
+      debug:
+        var: grep_output2.stdout_lines
+    - name: restarting sshd
+      become_user: root
+      become: yes
+      shell: systemctl restart sshd
+    - name: checking sshd status
+      become_user: root
+      become: yes
+      shell: systemctl status sshd
+      register: grep_output3
+    - name: print output
+      debug:
+        var: grep_output3.stdout_lines

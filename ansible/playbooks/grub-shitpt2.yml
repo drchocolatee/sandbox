@@ -1,0 +1,24 @@
+---
+- name: Remove root from GRUB superusers
+  hosts: 10.23.1.176, 10.20.1.175, 10.23.1.174, 10.23.1.173, 10.21.2.225, 10.20.2.224, 10.20.2.223, 10.20.1.168, 10.23.1.166, 10.23.1.165, 10.23.1.164, 10.23.2.222, 10.23.1.162, 10.23.2.221, 10.23.1.163, 10.20.1.160, 10.20.1.159, 10.20.1.146, 10.25.1.158, 10.22.2.220, 10.21.1.157, 10.23.2.219, 10.24.1.144, 10.24.2.218, 10.23.1.155, 10.23.1.156, 10.23.2.217, 10.25.2.216, 10.23.1.154, 10.23.1.153, 10.23.1.152, 10.23.1.151, 10.23.1.150, 10.23.1.149, 10.23.1.148, 10.23.2.215, 10.23.2.214, 10.21.2.212, 10.21.2.211, 10.21.2.210, 10.21.2.209, 10.21.2.208, 10.21.2.207, 10.21.2.203, 10.23.2.206, 10.23.2.205, 10.23.2.204, 10.24.2.202, 10.20.1.143, 10.20.1.145, 10.20.1.142, 10.20.2.200
+  become: true
+
+  tasks:
+    - name: Remove root from superusers list
+      become_user: root
+      become: yes
+      lineinfile:
+        path: /boot/grub2/grub.cfg
+        regexp: 'set superusers="ipeAdmin"'
+        replace: ''
+        state: present
+        backup: yes
+    - name: verify superuser acct
+      become_user: root
+      become: yes
+      shell: grep -iw "superusers" /boot/grub2/grub.cfg
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines

@@ -1,0 +1,35 @@
+# mount_chi.yml
+---
+ - name: run task on all hosts
+   hosts: all_hosts
+   tasks:
+    - name: Make Config change
+      become_user: root
+      become: yes
+      shell: echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" >> /etc/fstab
+    - name: verify change
+      become_user: root
+      become: yes
+      shell: grep shm /etc/fstab
+      register: grep_output
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: unmounting /dev/shm
+      become_user: root
+      become: yes
+      shell: umount /dev/shm
+      warn: false
+    - name: mounting /dev/shm
+      become_user: root
+      become: yes
+      shell: mount /dev/shm
+      warn: false
+    - name: see mountpoint
+      become_user: root
+      become: yes
+      shell: mount | grep /dev/shm
+      register: grep_output2
+    - name: print output
+      debug:
+        var: grep_output2.stdout_lines

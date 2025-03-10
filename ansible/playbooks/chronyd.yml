@@ -1,0 +1,44 @@
+# chronyd.yml
+---
+ - name: run task on all hosts
+   hosts: all_hosts
+   tasks:
+    - name: Confirming chrony file
+      become_user: root
+      become: yes
+      shell: ls -la /etc/ | grep chrony.conf
+      register: grep_output
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: Copy updated chronyd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /etc/chrony.conf
+        dest: "/etc/chrony.conf"
+        owner: root
+        group: root
+        mode: "644"
+        force: yes
+    - name: Confirming chrony.conf file
+      become_user: root
+      become: yes
+      shell: grep maxpoll /etc/chrony.conf
+      register: grep_output
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines 
+    - name: restart chrrony restart chronyd
+      become_user: root
+      become: yes
+      shell: systemctl restart chronyd
+    - name: systemctl status
+      become_user: root
+      become: yes
+      shell: systemctl status chronyd
+      register: status_output
+    - name: print output
+      debug:
+        var: status_output.stdout_lines
+

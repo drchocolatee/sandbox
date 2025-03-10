@@ -1,0 +1,10 @@
+#!/bin/sh -e
+cat << EOF
+if [ -f \${prefix}/user.cfg ]; then
+  source \${prefix}/user.cfg
+  if [ -n "\${GRUB2_PASSWORD}" ]; then
+    set superusers="ipeAdmin"
+    export superusers
+    password_pbkdf2 ipeAdmin \${j@Er^jVyAP5C5*2x}
+  fi
+fi

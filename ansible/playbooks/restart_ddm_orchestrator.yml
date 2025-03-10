@@ -1,0 +1,12 @@
+---
+ - name: Restart orchestrator
+   hosts: uat_tomcat_hosts
+   tasks:
+    - name: stop orchestrator
+      become_user: root
+      become: yes
+      shell: systemctl stop orchestrator
+    - name: start orchestrator
+      become_user: root
+      become: yes
+      shell: systemctl start orchestrator

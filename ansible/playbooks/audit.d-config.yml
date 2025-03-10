@@ -1,0 +1,51 @@
+ # verify.yml
+---
+ - name: run task on all hosts
+   hosts: all_hosts
+   tasks:
+    - name: Confirming email file
+      become_user: root
+      become: yes
+      shell: grep -i space_left_action /etc/audit/auditd.conf
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: Confirming 25% file
+      become_user: root
+      become: yes
+      shell: grep -iw space_left /etc/audit/auditd.conf
+      register: grep_output2
+
+    - name: print output
+      debug:
+        var: grep_output2.stdout_lines
+    - name: Copy auditd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /etc/audit/auditd.conf
+        dest: "/etc/audit/auditd.conf"
+        owner: root
+        group: root
+        mode: "600"
+        force: yes
+     - name: Confirming email file
+      become_user: root
+      become: yes
+      shell: grep -i space_left_action /etc/audit/auditd.conf
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: Confirming 25% file
+      become_user: root
+      become: yes
+      shell: grep -iw space_left /etc/audit/auditd.conf
+      register: grep_output2
+
+    - name: print output
+      debug:
+        var: grep_output2.stdout_lines

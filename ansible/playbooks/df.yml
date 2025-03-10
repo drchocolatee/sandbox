@@ -1,0 +1,14 @@
+# verify.yml
+---
+ - name: run task on all hosts
+   hosts: tripwire_hosts
+   tasks:
+    - name: Confirming audisp-remote.conf file
+      become_user: root
+      become: yes
+      shell: df -h | grep 91
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines

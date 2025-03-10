@@ -1,0 +1,14 @@
+---
+ - name: run task on all hosts
+   hosts: 
+   tasks:
+    - name: Copy updated chronyd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /etc/ansible/templates/kafka_server.properties.j2
+        dest: "/etc/kafka/server.properties"
+        owner: kafka
+        group: kafka
+        mode: "660"
+        force: yes

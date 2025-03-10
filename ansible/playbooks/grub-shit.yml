@@ -1,0 +1,26 @@
+---
+- name: Remove root from GRUB superusers
+  hosts: all_hosts
+  become: true
+
+  tasks:
+    - name: update grub.cfg
+      become_user: root
+      become: yes
+      shell: cp -vp /boot/grub2/grub.cfg /boot/grub2/grub.cfg-backup-04042023
+
+    - name: Remove root from superusers list
+      ansible.builtin.replace:
+        path: /boot/grub2/grub.cfg
+        regexp: 'set superusers="root"'
+        replace: ''
+        backup: yes
+    - name: verify superuser acct
+      become_user: root
+      become: yes
+      shell: grep -iw "superusers" /boot/grub2/grub.cfg
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines

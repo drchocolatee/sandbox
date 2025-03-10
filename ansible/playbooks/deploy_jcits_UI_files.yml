@@ -1,0 +1,79 @@
+---
+ - name: Deploy jcits UI files
+   hosts: uat_tomcat_hosts
+   tasks:
+    - name: Copy react.tar.gz
+      become_user: root
+      become: yes
+      copy:
+        src: /home/rpms/react.tar.gz
+        dest: /tmp
+        owner: tomcat
+        group: tomcat
+        mode: "644"
+        force: yes
+    - name: delete ROOT directory
+      become: yes
+      file:
+        path: /usr/share/tomcat/webapps/ROOT
+        state: absent
+    - name: create ROOT directory
+      become: yes
+      file:
+        dest: /usr/share/tomcat/webapps/ROOT
+        state: directory
+        owner: tomcat
+        group: tomcat
+    - name: delete ROOT.war 
+      become: yes
+      file:
+        path: /var/lib/csca/webapps/ROOT.war
+        state: absent
+    - name: Copy ROOT.war
+      become_user: root
+      become: yes
+      copy:
+        src: /home/rpms/ROOT.war
+        dest: /var/lib/csca/webapps/ROOT.war
+        owner: tomcat
+        group: tomcat
+        mode: "644"
+        force: yes
+    - name: create symlink for the ROOT.war
+      become: yes
+      file:
+        src: /var/lib/csca/webapps/ROOT.war
+        dest: /usr/share/tomcat/webapps/ROOT.war
+        state: link
+        owner: tomcat
+        group: tomcat
+        force: yes
+    - name: Unzip react.tar.gz
+      become_user: root
+      become: yes
+      unarchive:
+        src: /tmp/react.tar.gz
+        dest: /usr/share/tomcat/webapps/ROOT
+        remote_src: True
+        owner: tomcat
+        group: tomcat
+        force: yes
+    - name: move files out of build directory and into ROOT
+      become_user: root
+      become: yes
+      shell: cd /usr/share/tomcat/webapps/ROOT/build; mv * ../; cd ../; rm -rf build
+    - name: delete ng directory
+      become: yes
+      file:
+        path: /usr/share/tomcat/webapps/ng
+        state: absent
+    - name: Copy ng.war
+      become_user: root
+      become: yes
+      copy:
+        src: /home/rpms/ng.war
+        dest: /usr/share/tomcat/webapps/ng.war
+        owner: tomcat
+        group: tomcat
+        mode: "644"
+        force: yes

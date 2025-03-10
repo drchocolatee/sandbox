@@ -1,0 +1,14 @@
+ verify_usb_disable.yml
+---
+ - name: run task on all hosts
+   hosts: all_hosts
+   tasks:
+    - name: Confirming disabled usb-storage config
+      become_user: root
+      become: yes
+      shell: grep usb-storage /etc/modprobe.d/* | grep -i "blacklist" | grep -v "^#" blacklist usb-storage
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines

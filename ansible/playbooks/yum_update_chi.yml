@@ -1,0 +1,18 @@
+---
+ - name: yum update
+   hosts: all_hosts
+   tasks:
+    - name: yum update
+      become_user: root
+      become: yes
+      shell: yum -y update krb5-libs
+
+    - name: yum update
+      become_user: root
+      become: yes
+      shell: yum -y update krb5-workstation
+
+    - name: yum update
+      become_user: root
+      become: yes
+      shell: yum -y update libkaddm5

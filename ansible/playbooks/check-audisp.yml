@@ -1,0 +1,35 @@
+ # verify.yml
+---
+ - name: run task on tomcat hosts
+   hosts: tomcat_hosts
+   tasks:
+    - name: Copy aduisp File
+      become_user: root
+      become: yes
+      replace:
+        path: /etc/csca/survey-app-server/survey.properties
+        regexp: com.ncontext.survey.common.edit_surveydef_role=SNC Admin
+        replace: com.ncontext.survey.common.edit_surveydef_role=SNC Admin|DCSA Admin
+    - name: Insert a line at the end of a file.
+      lineinfile:
+        path: /etc/csca/survey-app-server/survey.properties
+        line: last
+    - name: "Example2: Add the line if it does not exist"
+        become: yes
+        become_user: root
+        lineinfile:
+          path: /etc/httpd/conf/httpd.conf
+          line: "com.ncontext.survey.common.edit_surveydef_role=SNC Admin|DCSA Admin"
+          state: present
+          backup: yes
+        register: example2out
+    - name: Confirming audisp-remote.conf file
+      become_user: root
+      become: yes
+      shell: cat /etc/csca/survey-app-server/survey.properties | grep 'com.ncontext.survey.common.edit_surveydef_role='
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+        

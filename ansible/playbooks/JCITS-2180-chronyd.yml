@@ -1,0 +1,25 @@
+# verify.yml
+---
+ - name: run task on memcached hosts
+   hosts: memcached_hosts
+   tasks:
+    - name: "Example2: Add the line if it does not exist"
+      become: yes
+      become_user: root
+      lineinfile:
+        path: /etc/chrony.conf
+        line: "server 0.rhel.pool.ntp.org iburst maxpoll 10"
+        state: present
+        backup: yes
+    - name: restart chronyd file
+      become_user: root
+      become: yes
+      shell: systemctl restart chronyd
+    - name: check status of chronyd
+      become_user: root
+      become: yes
+      shell: systemctl status chronyd
+      register: grep_output
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines

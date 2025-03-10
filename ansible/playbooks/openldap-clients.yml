@@ -1,0 +1,31 @@
+# openldap-clients.yml
+---
+ - name: run task on all hosts
+   hosts: all_hosts
+   tasks:
+    - name: Confirming openldap
+      become_user: root
+      become: yes
+      shell: yum info openldap
+      register: grep_output
+
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: Confirming openldap-clients
+      become_user: root
+      become: yes
+      shell: yum info openldap
+      register: grep_output2
+
+    - name: print output
+      debug:
+        var: grep_output2.stdout_lines
+  - name: update openldap
+      become_user: root
+      become: yes
+      shell: yum update openldap
+  - name: update openldap-clients
+      become_user: root
+      become: yes
+      shell: yum update openldap-clients

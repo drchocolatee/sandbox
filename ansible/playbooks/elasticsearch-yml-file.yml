@@ -1,0 +1,14 @@
+---
+ - name: run task on all hosts
+   hosts: uat_es_hosts
+   tasks:
+    - name: Copy updated chronyd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /etc/ansible/templates/elasticsearch.yml.j2
+        dest: "/etc/elasticsearch/elasticsearch.yml"
+        owner: root
+        group: elasticsearch
+        mode: "660"
+        force: yes

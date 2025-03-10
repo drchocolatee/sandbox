@@ -1,0 +1,13 @@
+# verify.yml
+---
+ - name: run task on JNIFI & JSED
+   hosts: all_hosts
+   tasks:
+    - name: Change file ownership, group and permissions
+      become: yes
+      become_user: root
+      ansible.builtin.file:
+       path: /etc/profile.d/tmout.sh
+       owner: root
+       group: root
+       mode: '0744'

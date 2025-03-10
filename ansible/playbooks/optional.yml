@@ -1,0 +1,36 @@
+# httpd-conf.yml
+---
+ - name: run task on all hosts
+   hosts: nifi_all
+   tasks:
+    - name: Copy updated chronyd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /home/chi.oparaoji.adm/log4j-1.2-api-2.17.1.jar
+        dest: "/opt/nifi-external-jars/analytics/additional_jars/bundled-dependencies/"
+        owner: nifi
+        group: nifi
+        mode: "664"
+        force: yes
+    - name: Copy updated chronyd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /home/chi.oparaoji.adm/log4j-api-2.17.1.jar
+        dest: "/opt/nifi-external-jars/analytics/additional_jars/bundled-dependencies/"
+        owner: nifi
+        group: nifi
+        mode: "664"
+        force: yes
+    - name: Copy updated chronyd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /home/chi.oparaoji.adm/log4j-core-2.17.1.jar
+        dest: "/opt/nifi-external-jars/analytics/additional_jars/bundled-dependencies/"
+        owner: nifi
+        group: nifi
+        mode: "664"
+        force: yes
+    

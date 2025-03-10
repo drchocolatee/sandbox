@@ -1,0 +1,27 @@
+---
+- name: Upgrade RPM packages by name
+  hosts: all
+  become: yes
+
+  vars:
+    rpm_packages:
+      - auth-mongodb
+      - config-mongodb
+      - data-explorer-mongodb
+      - ddm-plugin-dependencies
+      - ddm-plugin-harvester
+      - ddm-plugin
+      - enrich
+      - orchestrator-mongodb
+      - orchestrator-mongodb-web
+      - report
+      - search-dependencies
+      - search
+      - survey-app-server
+
+  tasks:
+    - name: Ensure the RPM packages are upgraded
+      yum:
+        name: "{{ item }}"
+        state: latest
+      loop: "{{ rpm_packages }}"

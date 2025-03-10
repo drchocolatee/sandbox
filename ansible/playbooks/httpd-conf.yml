@@ -1,0 +1,31 @@
+# httpd-conf.yml
+---
+ - name: run task on all hosts
+   hosts: 10.24.2.202
+   tasks:
+    - name: Confirming LogFormat in httpd.conf
+      become_user: root
+      become: yes
+      shell: cat /etc/httpd/conf/httpd.conf | grep -i "LogFormat"
+      register: grep_output
+    - name: print output
+      debug:
+        var: grep_output.stdout_lines
+    - name: Copy updated chronyd.conf File
+      become_user: root
+      become: yes
+      copy:
+        src: /etc/ansible/templates/httpd.conf
+        dest: "/etc/httpd/conf/httpd.conf"
+        owner: root
+        group: root
+        mode: "644"
+        force: yes
+    - name: Confirming LogFormat in httpd.conf
+      become_user: root
+      become: yes
+      shell: cat /etc/httpd/conf/httpd.conf | grep -i "LogFormat"
+      register: grep_output2
+    - name: print output
+      debug:
+        var: grep_output2.stdout_lines
